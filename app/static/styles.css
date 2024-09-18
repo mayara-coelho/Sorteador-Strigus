@@ -16,6 +16,7 @@ body {
     width: 30%;  
     height: auto;  
     max-width: 500px; 
+    transform: translate(-12%, -15%);
 }
 
 .container {

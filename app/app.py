@@ -1,19 +1,47 @@
-from flask import Flask, render_template, request, jsonify
+from flask import Flask, render_template, request, jsonify, Response
 import pandas as pd
 import os
 import random
 import redis
+from prometheus_client import Counter, Gauge, generate_latest, CONTENT_TYPE_LATEST
 
 app = Flask(__name__)
 UPLOAD_FOLDER = 'uploads'
 app.config['UPLOAD_FOLDER'] = UPLOAD_FOLDER
 
 # Configuração do Redis
-redis_client = redis.StrictRedis(host='172.17.0.2', port=6379, db=0, decode_responses=True)
+redis_client = redis.StrictRedis(host='localhost', port=6379, db=0, decode_responses=True)
 
-# Verifica se o diretório de upload existe, caso contrário, cria-o
 if not os.path.exists(UPLOAD_FOLDER):
     os.makedirs(UPLOAD_FOLDER)
+
+# Métricas Prometheus
+requests_total = Counter('requests_total', 'Total de requisições HTTP', ['method', 'endpoint', 'http_status'])
+errors_total = Counter('errors_total', 'Total de erros HTTP', ['method', 'endpoint', 'http_status'])
+uploads_total = Counter('uploads_total', 'Total de uploads de arquivos', ['file_type'])
+draws_total = Counter('draws_total', 'Total de operações de sorteio')
+redraws_total = Counter('redraws_total', 'Total de operações de redraw')
+participants_gauge = Gauge('participants_current', 'Número atual de participantes processados')
+
+@app.before_request
+def before_request():
+    pass
+
+@app.after_request
+def after_request(response):
+    method = request.method
+    endpoint = request.path
+    status_code = response.status_code
+    requests_total.labels(method=method, endpoint=endpoint, http_status=status_code).inc()
+
+    if 400 <= status_code < 600:
+        errors_total.labels(method=method, endpoint=endpoint, http_status=status_code).inc()
+
+    return response
+
+@app.route('/metrics')
+def metrics():
+    return Response(generate_latest(), mimetype=CONTENT_TYPE_LATEST)
 
 @app.route('/')
 def index():
@@ -32,6 +60,13 @@ def upload_file():
         filepath = os.path.join(app.config['UPLOAD_FOLDER'], file.filename)
         file.save(filepath)
 
+        # Incrementa o contador de uploads de arquivos
+        if file.filename.endswith('.csv'):
+            file_type = 'csv'
+        else:
+            file_type = 'excel'
+        uploads_total.labels(file_type=file_type).inc()
+
         if file.filename.endswith('.csv'):
             df = pd.read_csv(filepath)
         else:
@@ -43,6 +78,8 @@ def upload_file():
 
 @app.route('/draw', methods=['POST'])
 def draw():
+    draws_total.inc()  # Incrementa o contador de sorteios realizados
+
     data = request.json
     filename = data.get('filename')
     column = data.get('column')
@@ -63,6 +100,7 @@ def draw():
         return jsonify({'error': 'Column not found'}), 400
 
     participants = df[column].dropna().tolist()
+    participants_gauge.set(len(participants))  # Atualiza o gauge com o número de participantes
 
     # Obter participantes garantidos do Redis
     guaranteed = redis_client.smembers('guaranteed')
@@ -81,6 +119,7 @@ def draw():
 
 @app.route('/redraw', methods=['POST'])
 def redraw():
+    redraws_total.inc()
     data = request.json
     filename = data.get('filename')
     column = data.get('column')
@@ -105,13 +144,15 @@ def redraw():
         return jsonify({'error': 'Column not found'}), 400
 
     participants = df[column].dropna().tolist()
+    participants_gauge.set(len(participants))  # Atualiza o gauge com o número de participantes
+
     guaranteed = redis_client.smembers('guaranteed')
     unresponsive = set(participants) - set(responses) - guaranteed
 
     if len(unresponsive) < quantity:
         return jsonify({'error': 'Not enough unresponsive participants'}), 400
 
-    selected = random.sample(unresponsive, quantity)
+    selected = random.sample(list(unresponsive), quantity)
     return jsonify({'selected': selected})
 
 @app.route('/update_responses', methods=['POST'])
