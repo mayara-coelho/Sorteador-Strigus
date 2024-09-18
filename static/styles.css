@@ -1,0 +1,266 @@
+body {
+    font-family: Oxygen, sans-serif;
+    margin: 0;
+    margin-top: 30px;
+    background: linear-gradient(#ce9135, #ff8a79);
+    background-size: cover;
+    min-width: 100vw;
+    min-height: 100vh;
+    overflow-x: hidden;
+}
+
+.penguin-img {
+    position: absolute;
+    right: 12%;
+    top: 15%;
+    width: 30%;  
+    height: auto;  
+    max-width: 500px; 
+}
+
+.container {
+    display: flex;
+    flex-direction: row;
+    justify-content: space-evenly;
+}
+
+#options-container, #results-container {
+    width: 100%; 
+    max-width: 600px;
+    background-color: #fff;
+    padding: 20px;
+    border: 2px solid #0a0208;
+    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
+    box-shadow: 10px 10px 0px 0px #0a0208;
+    z-index: 1;
+    margin: 0 auto;
+}
+
+#results-container {
+    position: relative;
+    overflow: auto;
+}
+
+.hidden {
+   visibility: hidden;
+}
+
+h1 {
+    text-align: center;
+    color: #0a0208;
+    font-family: Oswald, sans-serif;
+    font-weight: 700;
+    font-size: 50px;
+    margin: 10px;
+}
+
+h2 {
+    color: #0a0208;
+}
+
+.upload-section, .options-section, #resultsSection {
+    margin-bottom: 20px;
+}
+
+#drop_zone {
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0;
+}
+
+.options-button {
+    background-color: #ffd900;
+    color: #1f0619;
+    border: none;
+    padding: 10px 15px;
+    margin-top: 10px;
+    font-size: 15px;
+    font-family: Oswald, sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    border: 2px solid #0a0208;
+    
+}
+
+button:hover {
+    transition: all .25s linear 0s;
+    box-shadow: 4px 4px 0px 0px #0a0208;
+}
+
+.disabled-button {
+    background-color: #cccccc !important;
+    color: #666666 !important;
+    cursor: not-allowed !important;
+    border: 2px solid #999999 !important;
+}
+
+button:disabled {
+    pointer-events: none;
+}
+
+button[id^="responseButton-"] {
+    background-color: #ffd900;
+    color: #1f0619;
+    border: none;
+    padding: 10px 15px;
+    font-size: 15px;
+    font-family: Oswald, sans-serif;
+    font-weight: 700;
+    cursor: pointer;
+    border: 2px solid #0a0208;
+    height: 50px;
+
+}
+
+hr {
+    height: 1px;
+    background-color: #0a0208;
+}
+
+input[type="file"], select {
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 1px solid #0a0208;
+    cursor: pointer;
+}
+
+input[type="file"]::file-selector-button {
+    border: none;
+    padding: 8px;
+    background-color: #e4e4e4;
+    cursor: pointer;
+    font-family: Oswald, sans-serif;
+    font-weight: 700;
+    text-transform: uppercase;
+}
+
+input[type="file"]::file-selector-button:hover {
+    background-color: #aaaaaa;
+    transition: all .25s linear 0s;
+}
+
+input[type="number"] {
+    width: 100%;
+    padding: 8px;
+    margin: 8px 0;
+    box-sizing: border-box;
+    border: 1px solid #0a0208;
+}
+
+input[type="checkbox"] {
+    -webkit-appearance: none;
+    background-color: #ffd900;
+    width: 15px;
+    height: 15px;
+    position: relative;
+    top: 5px;
+}
+
+input[type="checkbox"]:checked {
+    background-image: url(./img/checked.png);
+}
+
+label {
+    display: block;
+    margin-top: 10px;
+    margin-bottom: 5px;
+}
+
+#resultsList {
+    list-style-type: none;
+    color:#0a0208;
+    font-family: Oswald, sans-serif;
+    font-weight: 700;
+    font-size: 30px;
+    padding: 0;
+}
+
+#resultsList li {
+    background-color: #e4e4e4;
+    margin-bottom: 10px;
+    padding: 10px;
+    padding-left: 20px;
+    display: flex;
+    justify-content: space-between;
+}
+
+div[id^="progress-container-"] {
+    margin: 20px;
+    width: 100px;
+    height: 100px;
+    position: relative;
+}
+
+.response-timer {
+    position: absolute;
+    top: 45px;
+    right: 50px;
+}
+
+#time-out-message {
+    color:#0a0208;
+    font-family: Oswald, sans-serif;
+    font-weight: 700;
+    font-size: 30px;
+    display: block;
+    text-align: center;
+    margin-top: 30px;
+}
+
+#guaranteedList li {
+    list-style-type: square;
+    color:#0a0208;
+    font-family: Oswald, sans-serif;
+    font-weight: 700;
+    font-size: 30px;
+    padding: 0;
+    margin-bottom: 10px;
+}
+
+#footer {
+    margin-top: 100px;
+    background: white;
+    height: 130px;
+}
+
+.devText {
+   padding: 20px;
+   margin: 0;
+}
+
+.icon {
+    width: 50px;
+    height: 50px;
+}
+
+.logo {
+    height: 50px;
+    width: auto;
+}
+
+.footer-top {
+    position: absolute;
+    height: 22px;
+    background-image: url(img/footer-bg.png);
+}
+
+.footerDisplay {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+}
+
+.devlinks a, .linuxLinks a {
+    margin-right: 20px;
+    text-decoration: none;
+}
+
+.devlinks {
+    padding-left: 70px;
+}
+
+.linuxLinks {
+    padding-right: 70px;
+}
