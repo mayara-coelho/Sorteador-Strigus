@@ -3,7 +3,7 @@ body {
     margin: 0;
     margin-top: 30px;
     background: linear-gradient(#ce9135, #ff8a79);
-    background-size: cover;
+    background-size: no-repeat;
     min-width: 100vw;
     min-height: 100vh;
     overflow-x: hidden;
@@ -24,13 +24,16 @@ body {
     justify-content: space-evenly;
 }
 
+#options-container {
+    max-height: fit-content;
+}
+
 #options-container, #results-container {
     width: 100%; 
     max-width: 600px;
     background-color: #fff;
     padding: 20px;
     border: 2px solid #0a0208;
-    box-shadow: 0 0 10px rgba(0, 0, 0, 0.2);
     box-shadow: 10px 10px 0px 0px #0a0208;
     z-index: 1;
     margin: 0 auto;
@@ -43,6 +46,17 @@ body {
 
 .hidden {
    visibility: hidden;
+}
+
+.hidden-error {
+    display: none;
+}
+
+#error-message {
+    color: red;
+    margin-bottom: 0px;
+    font-size: 12px;
+    font-family: Oxygen, sans-serif;
 }
 
 h1 {
@@ -220,14 +234,23 @@ div[id^="progress-container-"] {
 }
 
 #footer {
-    margin-top: 100px;
     background: white;
     height: 130px;
+    margin-top: 95px;
+}
+
+.footer-top {
+    position: relative;
+    top: -22px;
+    min-width: 100vw;
 }
 
 .devText {
-   padding: 20px;
-   margin: 0;
+    color:#0a0208;
+    font-family: Oxygen, sans-serif;
+    padding-left: 25px;
+    padding-bottom: 20px;
+    margin: 0;
 }
 
 .icon {
@@ -238,12 +261,6 @@ div[id^="progress-container-"] {
 .logo {
     height: 50px;
     width: auto;
-}
-
-.footer-top {
-    position: absolute;
-    height: 22px;
-    background-image: url(img/footer-bg.png);
 }
 
 .footerDisplay {

@@ -7,20 +7,53 @@ document.addEventListener('DOMContentLoaded', function() {
     function matchHeights() {
         const optionsContainer = document.getElementById('options-container');
         const resultsContainer = document.getElementById('results-container');
-        resultsContainer.style.height = `${optionsContainer.offsetHeight}px`;
+        resultsContainer.style.height = `${optionsContainer.height}px`;
     }
     
     window.onload = matchHeights;
     window.onresize = matchHeights;
 
+    function showErrorMessage() {
+        const errorMessage = document.getElementById('error-message');
+        errorMessage.classList.remove('hidden-error');
+    }
+
+    function hideErrorMessage() {
+        const errorMessage = document.getElementById('error-message');
+        errorMessage.classList.add('hidden-error');
+    }
+
     function handleFileUpload(event) {
         event.preventDefault();
-
+    
         const fileInput = document.getElementById('fileInput');
+        const file = fileInput.files[0];
+    
+        if (!file) {
+            const errorMessage = document.getElementById('error-message');
+            errorMessage.textContent = 'Por favor, selecione um arquivo.';
+            showErrorMessage();
+            return;
+        }
+    
+        const validExtensions = ['.xlsx', '.xls', '.csv']; 
+        const fileName = file.name;
+        const fileExtension = fileName.substring(fileName.lastIndexOf('.')).toLowerCase();
+    
+        if (!validExtensions.includes(fileExtension)) {
+            const errorMessage = document.getElementById('error-message');
+            errorMessage.textContent = 'Formato de arquivo inválido.';
+            showErrorMessage();
+            return;
+        }
+
+        hideErrorMessage();
+    
         const formData = new FormData();
-        formData.append('file', fileInput.files[0]);
+        formData.append('file', file);
         sendUploadRequest(formData);
     }
+    
 
     function sendUploadRequest(formData) {
         fetch('/upload', {
@@ -33,13 +66,16 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function handleUploadResponse(data) {
-        if(data.error) {
-            alert(data.error);
+        if (data.error) {
+            const errorMessage = document.getElementById('error-message');
+            errorMessage.textContent = data.error;
+            showErrorMessage();
         } else {
+            hideErrorMessage();
             createColumnsOptions(data.columns);
         }
     }
-
+    
     function createColumnsOptions(columns) {
         const columnSelect = document.getElementById('columnSelect');
         columnSelect.innerHTML = '';
