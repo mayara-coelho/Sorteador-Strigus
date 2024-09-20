@@ -4,23 +4,14 @@ document.addEventListener('DOMContentLoaded', function() {
     let responseStatus = {};
     let redrawButton = null;
 
-    function matchHeights() {
-        const optionsContainer = document.getElementById('options-container');
-        const resultsContainer = document.getElementById('results-container');
-        resultsContainer.style.height = `${optionsContainer.height}px`;
-    }
-    
-    window.onload = matchHeights;
-    window.onresize = matchHeights;
-
     function showErrorMessage() {
         const errorMessage = document.getElementById('error-message');
-        errorMessage.classList.remove('hidden-error');
+        errorMessage.classList.remove('hide-error');
     }
 
     function hideErrorMessage() {
         const errorMessage = document.getElementById('error-message');
-        errorMessage.classList.add('hidden-error');
+        errorMessage.classList.add('hide-error');
     }
 
     function handleFileUpload(event) {
@@ -77,7 +68,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function createColumnsOptions(columns) {
-        const columnSelect = document.getElementById('columnSelect');
+        const columnSelect = document.getElementById('column-select');
         columnSelect.innerHTML = '';
 
         columns.forEach(column => {
@@ -89,13 +80,14 @@ document.addEventListener('DOMContentLoaded', function() {
     }
         
     function handleVisibility() {
-        const liveOptions = document.getElementById('liveOptions');
-        const guaranteedSection = document.getElementById('guaranteedSection');
-        const isLiveModeChecked = document.getElementById('liveMode').checked;
-        if (isLiveModeChecked) {
-            liveOptions.classList.remove('hidden');
-        } else {
-            liveOptions.classList.add('hidden');
+        const liveOptions = document.getElementById('live-options');
+        const guaranteedSection = document.getElementById('guaranteed-section');
+        const isLiveModeChecked = document.getElementById('live-mode').checked;
+        const isEmotionChecked = document.getElementById('with-emotion').checked;
+
+        liveOptions.classList.toggle('hidden', !isLiveModeChecked);
+
+        if (!isLiveModeChecked || !isEmotionChecked) {
             guaranteedSection.classList.add('hidden');
         }
     }
@@ -112,8 +104,16 @@ document.addEventListener('DOMContentLoaded', function() {
         }
         Object.values(liveTimers).forEach(timer => clearInterval(timer.interval));
         liveTimers = {};
-        document.getElementById('resultsList').innerHTML = '';
-        document.getElementById('guaranteedList').innerHTML = '';
+
+        Object.keys(liveTimers).forEach(name => {
+            const container = document.getElementById(`progress-container-${name}`);
+            if (container) {
+                container.remove();
+            }
+        });
+
+        document.getElementById('results-list').innerHTML = '';
+        document.getElementById('guaranteed-list').innerHTML = '';
         
         if (redrawButton) {
             redrawButton.remove();
@@ -122,11 +122,11 @@ document.addEventListener('DOMContentLoaded', function() {
     }
         
     function getDrawRequestData() {
-        const column = document.getElementById('columnSelect').value;
-        const quantity = document.getElementById('quantityInput').value;
-        const emotion = document.getElementById('withEmotion').checked;
-        const live = document.getElementById('liveMode').checked;
-        const liveTime = document.getElementById('responseTime').value;
+        const column = document.getElementById('column-select').value;
+        const quantity = document.getElementById('quantity-input').value;
+        const emotion = document.getElementById('with-emotion').checked;
+        const live = document.getElementById('live-mode').checked;
+        const liveTime = document.getElementById('response-time').value;
 
         return {
             filename: document.getElementById('fileInput').files[0].name,
@@ -155,7 +155,9 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function processDrawResponse(data, emotion, liveTime) {
         if (data.error) {
-            alert(data.error);
+            const errorMessage = document.getElementById('error-message');
+            errorMessage.textContent = 'Por favor, clique em carregar arquivo.';
+            showErrorMessage();
         } else {
             handleResultsDisplay(data.selected, emotion, data.live, liveTime);
         }
@@ -177,17 +179,17 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function startCountdown(time, countdownElement, selected, live, liveTime) {
-        const drawButton = document.getElementById('drawButton');
+        const drawButton = document.getElementById('draw-button');
         drawButton.disabled = true; 
         drawButton.classList.add('disabled-button');
 
         countdownElement.classList.remove('hidden');
     
-        if (document.getElementById('withEmotion').checked) {
+        if (document.getElementById('with-emotion').checked) {
             document.getElementById('wrap').classList.remove('hidden');
         }
 
-        if (document.getElementById('withEmotion').checked && document.getElementById('liveMode').checked) {
+        if (document.getElementById('with-emotion').checked && document.getElementById('live-mode').checked) {
             guaranteedSection.classList.add('hidden');
         }
 
@@ -199,7 +201,7 @@ document.addEventListener('DOMContentLoaded', function() {
                 document.getElementById('wrap').classList.add('hidden');
                 setTimeout(function() {
                     displayResults(selected, live, liveTime);
-                    if (document.getElementById('liveMode').checked) {
+                    if (document.getElementById('live-mode').checked) {
                         guaranteedSection.classList.remove('hidden');
                     }
 
@@ -225,7 +227,7 @@ document.addEventListener('DOMContentLoaded', function() {
     
 
     function displayResults(selectedNames, live, liveTime) {
-        const resultsList = document.getElementById('resultsList');
+        const resultsList = document.getElementById('results-list');
         resultsList.innerHTML = '';
 
         selectedNames.forEach(name => {
@@ -241,7 +243,7 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function updateSectionVisibility() {
-        const resultsSection = document.getElementById('resultsSection');
+        const resultsSection = document.getElementById('results-section');
         resultsSection.classList.remove('hidden');
     }
 
@@ -268,10 +270,11 @@ document.addEventListener('DOMContentLoaded', function() {
         responseButton.id = `responseButton-${name}`;
         responseButton.textContent = 'SORTEADO RESPONDEU';
         responseStatus[name] = false;
-        const guaranteedSection = document.getElementById('guaranteedSection');
+        const guaranteedSection = document.getElementById('guaranteed-section');
 
         responseButton.addEventListener('click', function() {
             handleResponse(name, responseButton);
+            responseStatus[name] = true;
             guaranteedSection.classList.remove('hidden');
         });
 
@@ -327,13 +330,16 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function handleResponse(name) {
         clearInterval(liveTimers[name].interval);
-        liveTimers[name].button.disabled = true;
-        const container = document.getElementById(`progress-container-${name}`);
-        const responseButton = document.getElementById(`responseButton-${name}`);
+        const container = liveTimers[name].container;
+        const responseButton = liveTimers[name].button;
+        
         if (container) {
             container.remove();
-            responseButton.remove()
         }
+        if (responseButton) {
+            responseButton.remove();
+        }
+        
         moveToGuaranteed(name);
     }
 
@@ -351,10 +357,10 @@ document.addEventListener('DOMContentLoaded', function() {
 
     function maybeAddRedrawButton(timeoutMessage) {
         if (!redrawButton) {
-            const resultsSection = document.getElementById('resultsSection');
+            const resultsSection = document.getElementById('results-section');
             redrawButton = document.createElement('button');
             redrawButton.textContent = 'SORTEAR NOVAMENTE';
-            redrawButton.classList.add('options-button');
+            redrawButton.classList.add('options-buttons');
             redrawButton.addEventListener('click', function () {
                 reDrawUnanswered();
                 redrawButton.remove();
@@ -366,8 +372,8 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     function moveToGuaranteed(name) {
-        const resultsList = document.getElementById('resultsList');
-        const guaranteedList = document.getElementById('guaranteedList');
+        const resultsList = document.getElementById('results-list');
+        const guaranteedList = document.getElementById('guaranteed-list');
         const item = Array.from(resultsList.children).find(li => li.textContent.includes(name));
         if (item) {
             resultsList.removeChild(item);
@@ -390,24 +396,23 @@ document.addEventListener('DOMContentLoaded', function() {
     }
     
     function getColumnSelection() {
-        return document.getElementById('columnSelect').value;
+        return document.getElementById('column-select').value;
     }
     
     function getQuantityInput() {
-        return document.getElementById('quantityInput').value;
+        return document.getElementById('quantity-input').value;
     }
     
     function getResponseTime() {
-        return document.getElementById('responseTime').value;
+        return document.getElementById('response-time').value;
     }
     
     function getUnansweredResponses() {
-        const responseStatus = {};
         return Object.keys(responseStatus).filter(name => !responseStatus[name]);
     }
     
     function getGuaranteedNames() {
-        const guaranteedList = document.getElementById('guaranteedList');
+        const guaranteedList = document.getElementById('guaranteed-list');
         return Array.from(guaranteedList.children).map(li => li.textContent);
     }
     
@@ -454,6 +459,6 @@ document.addEventListener('DOMContentLoaded', function() {
     }
 
     document.getElementById('uploadForm').addEventListener('submit', handleFileUpload);
-    document.getElementById('liveMode').addEventListener('change', handleVisibility);
-    document.getElementById('drawButton').addEventListener('click', handleDraw);
+    document.getElementById('live-mode').addEventListener('change', handleVisibility);
+    document.getElementById('draw-button').addEventListener('click', handleDraw);
 });

@@ -1,22 +1,36 @@
+:root {
+    --primary-gradient-start: #ce9135;
+    --primary-gradient-end: #ff8a79;
+    --white-color: #fff;
+    --dark-color: #0a0208;
+    --button-bg-color: #ffd900;
+    --light-gray-color: #d4d4d4;
+    --medium-gray-color: #999999;
+    --dark-gray-color: #666666;
+    --error-color: red;
+
+    --font-oxygen: 'Oxygen', sans-serif;
+    --font-oswald: 'Oswald', sans-serif;
+}
+
+/* basic structure */
+
 body {
-    font-family: Oxygen, sans-serif;
-    margin: 0;
-    margin-top: 30px;
-    background: linear-gradient(#ce9135, #ff8a79);
-    background-size: no-repeat;
+    font-family: var(--font-oxygen), Arial, sans-serif;
+    margin: 30px 0 0 0;
+    background: linear-gradient(var(--primary-gradient-start), var(--primary-gradient-end)) no-repeat;
     min-width: 100vw;
     min-height: 100vh;
     overflow-x: hidden;
 }
 
-.penguin-img {
+.linux-penguin {
     position: absolute;
     right: 12%;
     top: 15%;
+    max-width: 500px;
     width: 30%;  
-    height: auto;  
-    max-width: 500px; 
-    transform: translate(-12%, -15%);
+    height: auto;
 }
 
 .container {
@@ -25,150 +39,110 @@ body {
     justify-content: space-evenly;
 }
 
+#options-container, #results-container {
+    width: 100%; 
+    max-width: 600px;
+    padding: 20px;
+    margin: 0 auto;
+    background-color: var(--white-color);
+    border: 2px solid var(--dark-color);
+    box-shadow: 10px 10px 0px 0px var(--dark-color);
+    z-index: 1;
+}
+
 #options-container {
     max-height: fit-content;
 }
 
-#options-container, #results-container {
-    width: 100%; 
-    max-width: 600px;
-    background-color: #fff;
-    padding: 20px;
-    border: 2px solid #0a0208;
-    box-shadow: 10px 10px 0px 0px #0a0208;
-    z-index: 1;
-    margin: 0 auto;
-}
-
 #results-container {
+    max-height: 741.719px;
     position: relative;
     overflow: auto;
 }
 
-.hidden {
-   visibility: hidden;
-}
-
-.hidden-error {
-    display: none;
-}
-
-#error-message {
-    color: red;
-    margin-bottom: 0px;
-    font-size: 12px;
-    font-family: Oxygen, sans-serif;
+.upload-section, .options-section, #results-section {
+    margin-bottom: 20px;
 }
 
 h1 {
-    text-align: center;
-    color: #0a0208;
-    font-family: Oswald, sans-serif;
+    font-family: var(--font-oswald);
     font-weight: 700;
     font-size: 50px;
+    color: var(--dark-color);
+    text-align: center;
     margin: 10px;
 }
 
 h2 {
-    color: #0a0208;
+    color: var(--dark-color);
 }
 
-.upload-section, .options-section, #resultsSection {
-    margin-bottom: 20px;
+hr {
+    height: 1px;
+    background-color: var(--dark-color);
 }
 
-#drop_zone {
-    width: 100%;
-    padding: 8px;
-    margin: 8px 0;
-}
+/* buttons */
 
-.options-button {
-    background-color: #ffd900;
-    color: #1f0619;
+.options-buttons, button[id^="responseButton-"] {
+    background-color: var(--button-bg-color);
     border: none;
     padding: 10px 15px;
     margin-top: 10px;
     font-size: 15px;
-    font-family: Oswald, sans-serif;
+    font-family: var(--font-oswald);
     font-weight: 700;
     cursor: pointer;
-    border: 2px solid #0a0208;
-    
+    border: 2px solid var(--dark-color); 
 }
 
 button:hover {
+    box-shadow: 4px 4px 0px 0px var(--dark-color);
     transition: all .25s linear 0s;
-    box-shadow: 4px 4px 0px 0px #0a0208;
-}
-
-.disabled-button {
-    background-color: #cccccc !important;
-    color: #666666 !important;
-    cursor: not-allowed !important;
-    border: 2px solid #999999 !important;
 }
 
 button:disabled {
     pointer-events: none;
 }
 
-button[id^="responseButton-"] {
-    background-color: #ffd900;
-    color: #1f0619;
-    border: none;
-    padding: 10px 15px;
-    font-size: 15px;
-    font-family: Oswald, sans-serif;
-    font-weight: 700;
-    cursor: pointer;
-    border: 2px solid #0a0208;
-    height: 50px;
-
+.disabled-button {
+    background-color: var(--light-gray-color);
+    color: var(--dark-gray-color);
+    border: 2px solid var(--medium-gray-color);
+    cursor: not-allowed;
 }
 
-hr {
-    height: 1px;
-    background-color: #0a0208;
-}
+/* inputs */
 
-input[type="file"], select {
+input[type="file"], select, input[type="number"] {
     width: 100%;
     padding: 8px;
     margin: 8px 0;
     box-sizing: border-box;
-    border: 1px solid #0a0208;
+    border: 1px solid var(--dark-color);
     cursor: pointer;
 }
 
 input[type="file"]::file-selector-button {
-    border: none;
-    padding: 8px;
-    background-color: #e4e4e4;
-    cursor: pointer;
-    font-family: Oswald, sans-serif;
+    font-family: var(--font-oswald);
     font-weight: 700;
     text-transform: uppercase;
+    background-color: var(--light-gray-color);
+    border: none;
+    padding: 8px;
+    cursor: pointer;
 }
 
 input[type="file"]::file-selector-button:hover {
-    background-color: #aaaaaa;
+    background-color: var(--medium-gray-color);
     transition: all .25s linear 0s;
-}
-
-input[type="number"] {
-    width: 100%;
-    padding: 8px;
-    margin: 8px 0;
-    box-sizing: border-box;
-    border: 1px solid #0a0208;
 }
 
 input[type="checkbox"] {
     -webkit-appearance: none;
-    background-color: #ffd900;
     width: 15px;
     height: 15px;
+    background-color: var(--button-bg-color);
     position: relative;
     top: 5px;
 }
@@ -183,29 +157,31 @@ label {
     margin-bottom: 5px;
 }
 
-#resultsList {
-    list-style-type: none;
-    color:#0a0208;
-    font-family: Oswald, sans-serif;
+/* draw results and timers */
+
+#results-list {
+    font-family: var(--font-oswald);
     font-weight: 700;
     font-size: 30px;
+    color: var(--dark-color);
     padding: 0;
+    list-style-type: none;
 }
 
-#resultsList li {
-    background-color: #e4e4e4;
+#results-list li {
+    display: flex;
+    justify-content: space-between;
+    background-color: var(--light-gray-color);
     margin-bottom: 10px;
     padding: 10px;
     padding-left: 20px;
-    display: flex;
-    justify-content: space-between;
 }
 
 div[id^="progress-container-"] {
-    margin: 20px;
+    position: relative;
     width: 100px;
     height: 100px;
-    position: relative;
+    margin: 20px;
 }
 
 .response-timer {
@@ -215,70 +191,94 @@ div[id^="progress-container-"] {
 }
 
 #time-out-message {
-    color:#0a0208;
-    font-family: Oswald, sans-serif;
+    font-family: var(--font-oswald);
     font-weight: 700;
     font-size: 30px;
+    color: var(--dark-color);
     display: block;
     text-align: center;
     margin-top: 30px;
 }
 
-#guaranteedList li {
-    list-style-type: square;
-    color:#0a0208;
-    font-family: Oswald, sans-serif;
+#guaranteed-list li {
+    font-family: var(--font-oswald);
     font-weight: 700;
     font-size: 30px;
-    padding: 0;
+    list-style-type: square;
+    color: var(--dark-color);
     margin-bottom: 10px;
+    padding: 0;
 }
+
+/* footer */
 
 #footer {
-    background: white;
+    background: var(--white-color);
     height: 130px;
     margin-top: 95px;
-}
-
-.footer-top {
     position: relative;
+}
+
+#footer::before {
+    content: '';
+    position: absolute;
+    background-image: url('/static/img/footer-bg.png');
+    background-size: cover;
+    background-repeat: no-repeat;
+    height: 22px;
     top: -22px;
-    min-width: 100vw;
+    left: 0;
+    width: 100%;
 }
 
-.devText {
-    color:#0a0208;
-    font-family: Oxygen, sans-serif;
-    padding-left: 25px;
-    padding-bottom: 20px;
-    margin: 0;
-}
-
-.icon {
-    width: 50px;
-    height: 50px;
-}
-
-.logo {
-    height: 50px;
-    width: auto;
-}
-
-.footerDisplay {
+.footer-container {
     display: flex;
     justify-content: space-between;
     align-items: center;
 }
 
-.devlinks a, .linuxLinks a {
+.dev-message {
+    color: var(--dark-color);
+    font-family: var(--font-oxygen);
+    padding: 10px 0 20px 25px;
+}
+
+.icons {
+    width: 50px;
+    height: 50px;
+}
+
+.linux-tips-logo {
+    height: 50px;
+    width: auto;
+}
+
+.dev-links {
+    padding-left: 70px;
+}
+
+.linux-links {
+    padding-right: 70px;
+}
+
+.dev-links a, .linux-links a {
     margin-right: 20px;
     text-decoration: none;
 }
 
-.devlinks {
-    padding-left: 70px;
-}
+/* visibility */
 
-.linuxLinks {
-    padding-right: 70px;
+.hidden {
+    visibility: hidden;
+ }
+ 
+.hide-error {
+    display: none;
+}
+ 
+#error-message {
+    font-size: 12px;
+    font-family: var(--font-oxygen);
+    color: var(--error-color);
+    margin-bottom: 0px;
 }

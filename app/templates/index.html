@@ -1,73 +1,73 @@
 <!DOCTYPE html>
-<html lang="en">
+<html lang="pt-BR">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta name="description" content="Sorteador Strigus - Um sorteador dinâmico e interativo para facilitar sorteios em live.">
     <title>Sorteador Strigus</title>
     <link rel="preconnect" href="https://fonts.googleapis.com">
     <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;700&display=swap" rel="stylesheet">
-    <link rel="preconnect" href="https://fonts.googleapis.com">
-    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
-    <link href="https://fonts.googleapis.com/css2?family=Oswald:wght@200..700&display=swap" rel="stylesheet">
-    <link href="https://fonts.googleapis.com/css?family=Raleway:400,300,600,800,900" rel="stylesheet" type="text/css">
+    <link href="https://fonts.googleapis.com/css2?family=Oxygen:wght@300;400;700&family=Oswald:wght@200..700&display=swap" rel="stylesheet">
     <link rel="stylesheet" href="/static/styles.css">
-    <link rel="stylesheet" href="/static/counter.css"> 
+    <link rel="stylesheet" href="/static/counter.css">
 </head>
+
 <body>
-    <div class="container">
+    <main class="container">
         <div id="options-container">
             <h1>Sorteador Strigus</h1>
             <div class="upload-section">
                 <h2>Carregar Arquivo</h2>
-                <p id="error-message" class="hidden-error"></p>
-                    <form id="uploadForm">
-                        <input type="file" name="file" id="fileInput">
-                        <button type="submit" class="options-button">CARREGAR</button>
-                    </form>
+                <p id="error-message" class="hide-error"></p>
+                <form id="uploadForm">
+                    <input type="file" name="file" id="fileInput">
+                    <button type="submit" class="options-buttons">CARREGAR</button>
+                </form>
             </div>
 
             <div class="options-section">
                 <h2>Opções</h2>
-                <label for="columnSelect">Selecione a coluna:</label>
-                <select id="columnSelect"></select>
+                <label for="column-select">Selecione a coluna:</label>
+                <select id="column-select"></select>
 
-                <label for="quantityInput">Quantas pessoas serão sorteadas:</label>
-                <input type="number" id="quantityInput" min="1" value="1">
+                <label for="quantity-input">Quantas pessoas serão sorteadas:</label>
+                <input type="number" id="quantity-input" min="1" value="1">
 
-                <label>
-                    <input type="checkbox" id="withEmotion"> Com emoção
+                <label for="with-emotion">
+                    <input type="checkbox" id="with-emotion"> Com emoção
                 </label>
 
-                <label>
-                    <input type="checkbox" id="liveMode"> Modo Live
+                <label for="live-mode">
+                    <input type="checkbox" id="live-mode"> Modo Live
                 </label>
-                <div id="liveOptions" class="hidden">
-                    <label for="responseTime">Insira quantos minutos o sorteado terá para se manifestar:</label>
-                    <input type="number" id="responseTime" min="1" value="1">
+
+                <div id="live-options" class="hidden">
+                    <label for="response-time">Insira quantos minutos o sorteado terá para se manifestar:</label>
+                    <input type="number" id="response-time" min="1" value="1">
                 </div>
 
-                <button id="drawButton" class="options-button">SORTEAR</button>
+                <button id="draw-button" class="options-buttons">SORTEAR</button>
             </div>
         </div>
-        
+
         <div id="results-container" class="hidden">
-            <div id="resultsSection" class="hidden" >
+            <div id="results-section" class="hidden">
                 <h2>Resultado do Sorteio</h2>
                 <span id="time-out-message" class="hidden">ACABOU O TEMPO! 😔</span>
                 <div id="progress-container"></div>
                 <div id="countdown" class="hidden"></div>
-                <ul id="resultsList"></ul>
-            </div>
-            
-            <div id="guaranteedSection" class="hidden">
-                <hr>
-                <h2>Já garantiram o prêmio:</h2>
-                <ul id="guaranteedList"></ul>
+                <ul id="results-list"></ul>
             </div>
 
-            <!-- Contador para "Com emoção" -->
-            <div id="wrap" class="hidden">  <!-- Escondido até que seja ativado -->
+            <!-- Contador modo "com emoção" -->
+            <div id="guaranteed-section" class="hidden">
+                <hr>
+                <h2>Já garantiram o prêmio:</h2>
+                <ul id="guaranteed-list"></ul>
+            </div>
+
+            <div id="wrap" class="hidden">
                 <div class="c"></div>
                 <div class="o"></div>
                 <div class="u"></div>
@@ -79,45 +79,49 @@
                 <defs>
                     <filter id="filter">
                         <feGaussianBlur in="SourceGraphic" stdDeviation="18" result="blur" />
-                        <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 28 -10" result="filter" />
+                        <feColorMatrix in="blur" mode="matrix" values="1 0 0 0 0  0 1 0 0 0  0 0 1 0 0  0 0 0 28 -10"
+                            result="filter" />
                         <feComposite in="SourceGraphic" in2="filter" operator="atop" />
                     </filter>
                 </defs>
             </svg>
+            <!-- Fim do contador modo "com emoção" -->
         </div>
 
-        <img src="/static/img/linux-penguin.png" alt="" class="penguin-img">
-    </div>
+        <img src="/static/img/linux-penguin.png" alt="Desenho de um pinguim estilizado, usando um moletom preto com 
+        capuz e óculos escuros, sentado em frente a um laptop. O pinguim está trabalhando em um computador, e há uma 
+        lata de cerveja com o rótulo 'Linux TIPA' na mesa ao lado." class="linux-penguin">
+    </main>
 
+    <script src="/static/scripts.js"></script>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
     <script src="https://cdn.jsdelivr.net/npm/progressbar.js"></script>
-    <script src="/static/scripts.js"></script>
 </body>
 
 <footer id="footer">
-    <img src="/static/img/footer-bg.png" alt="" class="footer-top">
-    <p class="devText">Feito com <span class="heart">❤</span> por Mayara Coelho</p>
-    <div class="footerDisplay">
-        <div class="devlinks">
+    <p class="dev-message">Feito com <span class="heart">❤</span> por Mayara Coelho</p>
+    <div class="footer-container">
+        <div class="dev-links">
             <a href="https://github.com/mayara-coelho" target="_blank">
-                <img src="static/icons/github.png" class="icon">
+                <img src="static/icons/github.png" class="icons">
             </a>
             <a href="https://www.linkedin.com/in/mayarabcoelho/" target="_blank">
-                <img src="static/icons/linkedin.png" class="icon">
+                <img src="static/icons/linkedin.png" class="icons">
             </a>
         </div>
-        
-        <div class="linuxLinks">
+
+        <div class="linux-links">
             <a href="https://linuxtips.io/" target="_blank">
-                <img src="static/icons/linuxtips-logo.png" class="logo">
+                <img src="static/icons/linuxtips-logo.png" class="linux-tips-logo">
             </a>
             <a href="https://www.youtube.com/@LinuxTips" target="_blank">
-                <img src="static/icons/youtube.png" class="icon">
+                <img src="static/icons/youtube.png" class="icons">
             </a>
             <a href="https://www.twitch.tv/linuxtips/" target="_blank">
-                <img src="static/icons/twitch.png" class="icon">
+                <img src="static/icons/twitch.png" class="icons">
             </a>
         </div>
     </div>
 </footer>
+
 </html>
