@@ -1,6 +1,6 @@
-Flask
-pandas
-openpyxl
-numpy
-prometheus_client
-redis
+Flask==2.3.2
+pandas>=2.1.0
+openpyxl==3.1.2
+numpy>=1.25.0
+prometheus_client>=0.16.0
+redis>=5.0.0
