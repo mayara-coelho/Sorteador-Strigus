@@ -36,11 +36,11 @@ Você poderá executar esta aplicação localmente de maneira simples utilizando
 
 1. Baixe a imagem de container da aplicação:
 
-    docker pull mayaracoelho/sorteador-strigus:v1.0
+``` docker pull mayaracoelho/sorteador-strigus:v1.0 ```
 
 2. Execute a aplicação com base na imagem
 
-    docker run -p 5000:5000 mayaracoelho/sorteador-strigus:v1.0
+``` docker run -p 5000:5000 mayaracoelho/sorteador-strigus:v1.0 ```
 
 3. Acesse seu navegador no endereço http://localhost:5000 ou http://127.0.0.1:5000
 
